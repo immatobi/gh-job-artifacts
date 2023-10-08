@@ -1,0 +1,39 @@
+name: Deploy Artifacts
+on:
+  push:
+    branches:
+      - 'staging'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout [download] code
+        uses: actions/checkout@v4
+      - name: Install NodeJs
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 18
+      - name: Install dependencies
+        run: npm install --force
+      - name: Run Unit Tests
+        run: npm test
+  build:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout [download] code
+        uses: actions/checkout@v4
+      - name: Install NodeJs
+        uses: actions/setup-node@v3
+        with: 
+          node-version: 18
+      - name: Install dependencies
+        run: npm install --force
+      - name: Build Project
+        run: npm run build
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Deploying..."
